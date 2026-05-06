@@ -22,7 +22,11 @@ router.get('/', async (req, res) => {
     
     if (status) query.status = status;
     if (counselor) query.counselor = counselor;
-    if (academicYear) query.academicYear = academicYear;
+    
+    // Robust academicYear handling
+    if (academicYear && academicYear !== 'undefined' && academicYear !== 'null' && academicYear !== '') {
+      query.academicYear = academicYear;
+    }
     if (startDate && endDate) query.dateOfInquiry = { $gte: new Date(startDate), $lte: new Date(endDate) };
     
     if (search) {
@@ -56,7 +60,10 @@ router.get('/stats', async (req, res) => {
   try {
     const { academicYear } = req.query;
     const q = { schoolId: req.user.schoolId };
-    if (academicYear) q.academicYear = academicYear;
+    
+    if (academicYear && academicYear !== 'undefined' && academicYear !== 'null' && academicYear !== '') {
+      q.academicYear = academicYear;
+    }
 
     const [total, today, converted, lost, pending] = await Promise.all([
       Inquiry.countDocuments(q),

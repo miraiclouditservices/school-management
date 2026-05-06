@@ -14,7 +14,10 @@ router.get('/admin', async (req, res) => {
     const { academicYear } = req.query;
     const schoolId = req.user.schoolId;
     const q = { schoolId };
-    if (academicYear) q.academicYear = academicYear;
+    
+    if (academicYear && academicYear !== 'undefined' && academicYear !== 'null' && academicYear !== '') {
+      q.academicYear = academicYear;
+    }
 
     const [students, staff, inquiries, feeStats, events, recentInquiries] = await Promise.all([
       Student.countDocuments({ ...q, admissionStatus: 'Active' }),
