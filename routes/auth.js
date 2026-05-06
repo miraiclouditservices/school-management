@@ -6,11 +6,11 @@ const { validate } = require('../middleware/validate');
 
 // Public routes
 router.post('/register-school', [
-  body('schoolName').trim().notEmpty(),
-  body('adminName').trim().notEmpty(),
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
-  body('phone').notEmpty(),
+  body('schoolName').trim().notEmpty().withMessage('School name is required'),
+  body('adminName').trim().notEmpty().withMessage('Principal name is required'),
+  body('email').isEmail().withMessage('Please enter a valid email address').normalizeEmail(),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('phone').notEmpty().withMessage('Phone number is required'),
 ], validate, auth.registerSchool);
 
 router.post('/login', [

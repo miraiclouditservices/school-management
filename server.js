@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,6 +8,15 @@ const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./config/db');
+
+// Validate essential environment variables
+const requiredEnv = ['JWT_SECRET', 'JWT_EXPIRE', 'MONGODB_URI'];
+requiredEnv.forEach(env => {
+  if (!process.env[env]) {
+    console.error(`CRITICAL ERROR: ${env} is not defined in .env file`);
+    process.exit(1);
+  }
+});
 
 const app = express();
 
