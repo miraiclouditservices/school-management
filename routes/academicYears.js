@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const AcademicYear = require('../models/AcademicYear');
+const { ensureAcademicYear } = require('../utils/academicYearUtils');
 const { protect, authorize } = require('../middleware/auth');
 
 router.use(protect);
@@ -7,7 +8,14 @@ router.use(protect);
 // Get all academic years
 router.get('/', async (req, res) => {
   try {
-    const years = await AcademicYear.find({ schoolId: req.user.schoolId }).sort({ startDate: -1 });
+    let years = await AcademicYear.find({ schoolId: req.user.schoolId }).sort({ startDate: -1 });
+    
+    // Auto-initialize if empty
+    if (years.length === 0) {
+      await ensureAcademicYear({}, req.user.schoolId);
+      years = await AcademicYear.find({ schoolId: req.user.schoolId }).sort({ startDate: -1 });
+    }
+    
     res.json({ success: true, data: years });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
