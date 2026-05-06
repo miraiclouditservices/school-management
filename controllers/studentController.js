@@ -4,6 +4,7 @@ const Fee = require('../models/Fee');
 const AcademicYear = require('../models/AcademicYear');
 const factory = require('./factory');
 const asyncHandler = require('../middleware/asyncHandler');
+const { ensureAcademicYear } = require('../utils/academicYearUtils');
 const Timetable = require('../models/Timetable');
 const Attendance = require('../models/Attendance');
 const Notice = require('../models/Notice');
@@ -122,6 +123,10 @@ exports.deleteStudent = factory.deleteOne(Student);
 // @access  Private (Admin/Staff)
 exports.createStudent = asyncHandler(async (req, res, next) => {
   req.body.schoolId = req.user.schoolId;
+  
+  // Auto-assign academic year if missing
+  req.body.academicYear = await ensureAcademicYear(req.body, req.user.schoolId);
+  
   const student = await Student.create(req.body);
 
   // 1. Auto-generate credentials

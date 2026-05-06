@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Inquiry = require('../models/Inquiry');
 const Student = require('../models/Student');
 const AcademicYear = require('../models/AcademicYear');
+const { ensureAcademicYear } = require('../utils/academicYearUtils');
 const { protect, authorize } = require('../middleware/auth');
 const { body } = require('express-validator');
 const { validate } = require('../middleware/validate');
@@ -86,16 +87,8 @@ router.post('/', authorize('admin', 'staff'), [
   try {
     req.body.schoolId = req.user.schoolId;
 
-    // AUTO-ASSIGN ACADEMIC YEAR IF MISSING
-    if (!req.body.academicYear) {
-      const currentYear = await AcademicYear.findOne({ schoolId: req.user.schoolId, isCurrent: true });
-      if (currentYear) {
-        req.body.academicYear = currentYear._id;
-      } else {
-        const anyYear = await AcademicYear.findOne({ schoolId: req.user.schoolId });
-        if (anyYear) req.body.academicYear = anyYear._id;
-      }
-    }
+    // AUTO-ASSIGN ACADEMIC YEAR IF MISSING (Dynamic handling)
+    req.body.academicYear = await ensureAcademicYear(req.body, req.user.schoolId);
 
     const inq = await Inquiry.create(req.body);
     res.status(201).json({ success: true, data: inq });
