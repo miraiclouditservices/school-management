@@ -27,7 +27,11 @@ connectDB();
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://school-manage-demo.netlify.app',
+    'https://school-management-web.netlify.app'
+  ],
   credentials: true
 }));
 
