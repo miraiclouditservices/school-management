@@ -28,6 +28,7 @@ const inquirySchema = new mongoose.Schema({
   // Preferences
   interestedPrograms: [{ type: String }], // Transport, Hostel, Extra-curricular
   preferredCommunication: { type: String, enum: ['Call', 'WhatsApp', 'Email', 'SMS'] },
+  transportRoute: { type: mongoose.Schema.Types.ObjectId, ref: 'Transport' },
   additionalNotes: { type: String },
   // Follow-up
   counselor: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' },

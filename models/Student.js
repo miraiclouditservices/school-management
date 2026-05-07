@@ -61,6 +61,7 @@ const studentSchema = new mongoose.Schema({
   transport: {
     required: { type: Boolean, default: false },
     routeNo: String, pickupPoint: String, vehicleNo: String,
+    transportRoute: { type: mongoose.Schema.Types.ObjectId, ref: 'Transport' },
   },
   hostel: {
     required: { type: Boolean, default: false },

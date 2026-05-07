@@ -18,6 +18,9 @@ router.post('/login', [
   body('password').notEmpty(),
 ], validate, auth.login);
 
+router.post('/verify-otp', auth.verifyOTP);
+router.post('/resend-otp', auth.resendOTP);
+
 // Protected routes
 router.use(protect);
 router.get('/me', auth.getMe);

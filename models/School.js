@@ -5,6 +5,8 @@ const schoolSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   phone: { type: String, required: true },
   address: { type: String },
+  website: { type: String, default: '' },
+  tagline: { type: String, default: '' },
   logo: { type: String, default: '' },
   status: { type: String, enum: ['Active', 'Suspended'], default: 'Active' },
 }, { timestamps: true });

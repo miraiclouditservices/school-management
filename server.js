@@ -10,7 +10,7 @@ const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./config/db');
 
 // Validate essential environment variables
-const requiredEnv = ['JWT_SECRET', 'JWT_EXPIRE', 'MONGODB_URI'];
+const requiredEnv = ['JWT_SECRET', 'JWT_EXPIRE', 'MONGODB_URI', 'BREVO_API_KEY'];
 requiredEnv.forEach(env => {
   if (!process.env[env]) {
     console.error(`CRITICAL ERROR: ${env} is not defined in .env file`);
@@ -63,6 +63,7 @@ app.use('/api/notices', require('./routes/notices'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/transport', require('./routes/transport'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV }));

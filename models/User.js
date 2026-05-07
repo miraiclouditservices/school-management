@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema({
   photo: { type: String, default: '' },
   staffId: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' },
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
-  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: false },
+  isVerified: { type: Boolean, default: false },
+  otp: { type: String },
+  otpExpires: { type: Date },
   lastLogin: { type: Date },
 }, { timestamps: true });
 

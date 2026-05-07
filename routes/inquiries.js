@@ -15,19 +15,37 @@ router.use(protect);
  */
 router.get('/', async (req, res) => {
   try {
-    const { page = 1, limit = 10, status, counselor, search, academicYear, startDate, endDate } = req.query;
+    const { 
+      page = 1, limit = 10, status, counselor, search, academicYear, 
+      startDate, endDate, classSeeking, modeOfInquiry 
+    } = req.query;
     
     // Multi-tenant isolation
     const query = { schoolId: req.user.schoolId };
     
     if (status) query.status = status;
     if (counselor) query.counselor = counselor;
+    if (classSeeking) query.classSeeking = classSeeking;
+    if (modeOfInquiry) query.modeOfInquiry = modeOfInquiry;
     
     // Robust academicYear handling
     if (academicYear && academicYear !== 'undefined' && academicYear !== 'null' && academicYear !== '') {
       query.academicYear = academicYear;
     }
-    if (startDate && endDate) query.dateOfInquiry = { $gte: new Date(startDate), $lte: new Date(endDate) };
+
+    if (startDate || endDate) {
+      query.dateOfInquiry = {};
+      if (startDate) {
+        const d = new Date(startDate);
+        d.setHours(0,0,0,0);
+        query.dateOfInquiry.$gte = d;
+      }
+      if (endDate) {
+        const d = new Date(endDate);
+        d.setHours(23,59,59,999);
+        query.dateOfInquiry.$lte = d;
+      }
+    }
     
     if (search) {
       query.$or = [
@@ -35,6 +53,7 @@ router.get('/', async (req, res) => {
         { inquiryId: { $regex: search, $options: 'i' } },
         { parentEmail: { $regex: search, $options: 'i' } },
         { parentMobile: { $regex: search, $options: 'i' } },
+        { classSeeking: { $regex: search, $options: 'i' } },
       ];
     }
 
