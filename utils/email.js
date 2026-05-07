@@ -1,4 +1,5 @@
 const axios = require('axios');
+// Mirai Cloud IT Services - Premium Email Utility v2.0
 
 /**
  * Sends a high-deliverability Premium branded OTP email via Brevo REST API (v3)
