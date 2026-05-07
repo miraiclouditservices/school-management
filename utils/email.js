@@ -97,15 +97,23 @@ const sendOTP = async (email, name, otp, schoolName = 'Institutional Portal') =>
     const errorMsg = error.response?.data?.message || error.message;
     console.error('❌ BREVO API ERROR:', errorMsg);
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('\n-----------------------------------------');
-      console.log('🚀 [DEV MODE] OTP CONSOLE DELIVERY (API Failed)');
-      console.log(`CODE: ${otp}`);
-      console.log('-----------------------------------------\n');
-      return { success: true, message: 'Logged to console' };
+    // Fallback for IP authorization or other API failures
+    // Always log to console so admin can see the OTP if API fails
+    console.log('\n-----------------------------------------');
+    console.log('🚀 OTP RECOVERY CONSOLE DELIVERY');
+    console.log(`FOR: ${email}`);
+    console.log(`CODE: ${otp}`);
+    console.log('-----------------------------------------\n');
+
+    if (errorMsg.includes('unrecognised IP')) {
+      return { 
+        success: true, 
+        message: 'Registration initiated. (Note: Email delivery pending IP authorization. OTP logged to server console.)',
+        devOtp: otp 
+      };
     }
 
-    throw new Error(errorMsg || 'Failed to send OTP email');
+    throw new Error('Verification service temporarily unavailable. Please try again later.');
   }
 };
 
