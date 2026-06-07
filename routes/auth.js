@@ -18,8 +18,14 @@ router.post('/login', [
   body('password').notEmpty(),
 ], validate, auth.login);
 
-router.post('/verify-otp', auth.verifyOTP);
-router.post('/resend-otp', auth.resendOTP);
+router.post('/verify-otp', [
+  body('email').isEmail().withMessage('Please enter a valid email address').normalizeEmail(),
+  body('otp').notEmpty().withMessage('OTP is required')
+], validate, auth.verifyOTP);
+
+router.post('/resend-otp', [
+  body('email').isEmail().withMessage('Please enter a valid email address').normalizeEmail()
+], validate, auth.resendOTP);
 
 // Protected routes
 router.use(protect);
