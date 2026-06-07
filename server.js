@@ -28,6 +28,8 @@ app.use(helmet());
 app.use(compression());
 app.use(cors({
   origin: [
+       "https://miraiflow.in",
+      "https://www.miraiflow.in",
     'http://localhost:3000',
     'https://school-manage-demo.netlify.app',
     'https://school-management-web.netlify.app'
